@@ -1,8 +1,15 @@
-export type MenuItem = {
+export interface MenuItem {
+  id: string;
   name: string;
   price: number;
-  category: 'taste' | 'sauce' | 'nuts';
-};
+  type: 'flavor' | 'sauce' | 'nut';
+}
+
+export interface MenuData {
+  flavors: MenuItem[];
+  sauces: MenuItem[];
+  nuts: MenuItem[];
+}
 
 export type Order = {
   timestamp: Date;
@@ -10,21 +17,22 @@ export type Order = {
   total: number;
 };
 
-export const MENU: MenuItem[] = [
-  // Taste
-  { name: 'Caramel', price: 7, category: 'taste' },
-  { name: 'Turron', price: 10, category: 'taste' },
-  { name: 'Frisa', price: 8, category: 'taste' },
-  { name: 'Chocolate', price: 7, category: 'taste' },
-  { name: 'Lemon', price: 7, category: 'taste' },
-
-  // Sauce
-  { name: 'Caramel', price: 0, category: 'sauce' },
-  { name: 'Chocolate', price: 0, category: 'sauce' },
-  { name: 'Frisa', price: 0, category: 'sauce' },
-
-  // Nuts
-  { name: 'Pistachio', price: 5, category: 'nuts' },
-  { name: 'Almond', price: 3, category: 'nuts' },
-  { name: 'Chocolate', price: 2, category: 'nuts' },
-]; 
+export const menuData: MenuData = {
+  flavors: [
+    { id: 'caramel', name: 'Caramel', price: 7, type: 'flavor' },
+    { id: 'turron', name: 'Turron', price: 10, type: 'flavor' },
+    { id: 'frisa', name: 'Frisa', price: 8, type: 'flavor' },
+    { id: 'chocolate', name: 'Chocolate', price: 7, type: 'flavor' },
+    { id: 'lemon', name: 'Lemon', price: 7, type: 'flavor' }
+  ],
+  sauces: [
+    { id: 'caramel-sauce', name: 'Caramel', price: 0, type: 'sauce' },
+    { id: 'chocolate-sauce', name: 'Chocolate', price: 0, type: 'sauce' },
+    { id: 'frisa-sauce', name: 'Frisa', price: 0, type: 'sauce' }
+  ],
+  nuts: [
+    { id: 'pistachio', name: 'Pistachio', price: 5, type: 'nut' },
+    { id: 'almond', name: 'Almond', price: 3, type: 'nut' },
+    { id: 'chocolate-nut', name: 'Chocolate', price: 2, type: 'nut' }
+  ]
+}; 

@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { IceCreamCone, ShoppingBasket } from 'lucide-react';
-import { MENU } from '@/types/menu';
+import { IceCreamCone, ShoppingBasket, X } from 'lucide-react';
+import { menuData } from '@/types/menu';
 import { useOrderManager } from '@/hooks/useOrderManager';
 import OrderHistoryModal from '@/components/OrderHistoryModal';
 import MenuItemCard from '@/components/MenuItemCard';
@@ -10,24 +10,27 @@ import Button from '@/components/ui/Button';
 
 export default function Home() {
   const [showModal, setShowModal] = useState(false);
-  const { counts, orderHistory, increment, decrement, getTotal, addToBasket, getItemId } = useOrderManager();
+  const { counts, orderHistory, increment, decrement, getTotal, addToBasket, getItemId, resetOrder } = useOrderManager();
   const total = getTotal();
+  const hasItems = Object.keys(counts).length > 0;
 
-  const renderSection = (title: string, category: 'taste' | 'sauce' | 'nuts') => {
-    const items = MENU.filter(item => item.category === category);
+  const renderSection = (title: string, category: 'flavor' | 'sauce' | 'nut') => {
+    const items = category === 'flavor' ? menuData.flavors :
+                 category === 'sauce' ? menuData.sauces :
+                 menuData.nuts;
     return (
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-3">{title}</h2>
         <div className="space-y-4">
           {items.map((item) => {
-            const id = getItemId(item.category, item.name);
+            const id = getItemId(item.type, item.name);
             return (
               <MenuItemCard
                 key={id}
                 item={item}
                 count={counts[id] || 0}
-                onIncrement={() => increment(item.category, item.name)}
-                onDecrement={() => decrement(item.category, item.name)}
+                onIncrement={() => increment(item.type, item.name)}
+                onDecrement={() => decrement(item.type, item.name)}
               />
             );
           })}
@@ -45,23 +48,36 @@ export default function Home() {
           </h1>
           <Button
             variant="secondary"
-            icon={ShoppingBasket}
             onClick={() => setShowModal(true)}
-          />
+            className="p-1 hover:bg-orange-500"
+          >
+            <ShoppingBasket size={30} />
+          </Button>
         </div>
 
-        {renderSection('Taste', 'taste')}
+        {renderSection('Taste', 'flavor')}
         {renderSection('Sauce', 'sauce')}
-        {renderSection('Nuts', 'nuts')}
+        {renderSection('Nuts', 'nut')}
 
-        <Button
-          onClick={addToBasket}
-          disabled={total === 0}
-          fullWidth
-          className="mt-6 py-2"
-        >
-          {total === 0 ? 'Add to basket' : `Add ${total.toFixed(2)} MAD to basket`}
-        </Button>
+        <div className="flex gap-3 mt-6">
+          <Button
+            onClick={addToBasket}
+            disabled={!hasItems}
+            fullWidth
+            className="py-2"
+          >
+            {!hasItems ? 'Add to basket' : `Add ${total.toFixed(2)} MAD to basket`}
+          </Button>
+          {hasItems && (
+            <Button
+              variant="danger"
+              onClick={resetOrder}
+              className="py-2 px-4"
+            >
+              Cancel
+            </Button>
+          )}
+        </div>
 
         {showModal && (
           <OrderHistoryModal orders={orderHistory} onClose={() => setShowModal(false)} />

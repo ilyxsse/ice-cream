@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Order, MENU } from '@/types/menu';
+import { Order, menuData, MenuItem } from '@/types/menu';
 
 type ItemCount = {
   [key: string]: number;
@@ -30,8 +30,9 @@ export function useOrderManager() {
   };
 
   const getTotal = () => {
-    return MENU.reduce((sum, item) => {
-      const id = getItemId(item.category, item.name);
+    const allItems = [...menuData.flavors, ...menuData.sauces, ...menuData.nuts];
+    return allItems.reduce((sum: number, item: MenuItem) => {
+      const id = getItemId(item.type, item.name);
       return sum + (counts[id] || 0) * item.price;
     }, 0);
   };
@@ -54,6 +55,10 @@ export function useOrderManager() {
     setCounts({});
   };
 
+  const resetOrder = () => {
+    setCounts({});
+  };
+
   return {
     counts,
     orderHistory,
@@ -62,5 +67,6 @@ export function useOrderManager() {
     getTotal,
     addToBasket,
     getItemId,
+    resetOrder,
   };
 } 

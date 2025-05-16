@@ -11,7 +11,7 @@ interface MenuItemCardProps {
 }
 
 export default function MenuItemCard({ item, count, onIncrement, onDecrement }: MenuItemCardProps) {
-  const isSauce = item.category === 'sauce';
+  const isSauce = item.type === 'sauce';
 
   return (
     <div className="flex justify-between items-center border p-3 rounded">

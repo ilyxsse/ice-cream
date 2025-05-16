@@ -13,18 +13,18 @@ type Props = {
 export default function OrderHistoryModal({ orders, onClose }: Props) {
   const formatOrderItems = (items: { [key: string]: number }) => {
     const categories = {
-      taste: [] as string[],
+      flavor: [] as string[],
       sauce: [] as string[],
-      nuts: [] as string[],
+      nut: [] as string[],
     };
 
     Object.entries(items).forEach(([item, quantity]) => {
-      const [name, category] = item.split(' (');
-      const cleanCategory = category.replace(')', '') as keyof typeof categories;
-      if (cleanCategory === 'sauce') {
-        categories[cleanCategory].push(name);
+      const [name, type] = item.split(' (');
+      const cleanType = type.replace(')', '') as keyof typeof categories;
+      if (cleanType === 'sauce') {
+        categories[cleanType].push(name);
       } else {
-        categories[cleanCategory].push(`${name} (x${quantity})`);
+        categories[cleanType].push(`${name} (x${quantity})`);
       }
     });
 
@@ -57,10 +57,10 @@ export default function OrderHistoryModal({ orders, onClose }: Props) {
                     {order.timestamp.toLocaleDateString()}, {order.timestamp.toLocaleTimeString()}
                   </div>
                   
-                  {categories.taste.length > 0 && (
+                  {categories.flavor.length > 0 && (
                     <div className="mb-2">
-                      <div className="font-medium">Taste:</div>
-                      {categories.taste.map((item, i) => (
+                      <div className="font-medium">Flavors:</div>
+                      {categories.flavor.map((item, i) => (
                         <div key={i} className="ml-2">{item}</div>
                       ))}
                     </div>
@@ -68,17 +68,17 @@ export default function OrderHistoryModal({ orders, onClose }: Props) {
 
                   {categories.sauce.length > 0 && (
                     <div className="mb-2">
-                      <div className="font-medium">Sauce:</div>
+                      <div className="font-medium">Sauces:</div>
                       {categories.sauce.map((item, i) => (
                         <div key={i} className="ml-2">{item}</div>
                       ))}
                     </div>
                   )}
 
-                  {categories.nuts.length > 0 && (
+                  {categories.nut.length > 0 && (
                     <div className="mb-2">
                       <div className="font-medium">Nuts:</div>
-                      {categories.nuts.map((item, i) => (
+                      {categories.nut.map((item, i) => (
                         <div key={i} className="ml-2">{item}</div>
                       ))}
                     </div>
