@@ -1,10 +1,10 @@
-# 🍦 Ice Cream Builder
+# Ice Cream Builder | [![Live Demo](https://img.shields.io/badge/-Live%20Demo-black?style=for-the-badge&logo=vercel)](https://ice-cream-pi.vercel.app/)
 
-A simple web app that lets users build their own ice cream by selecting flavors and managing quantities — all with real-time pricing and order history.
+A simple web app that lets users build their own ice cream — with real-time pricing and order history.
 
 ---
 
-## ✨ Features
+## 🍦 Features
 
 - Select from a list of available flavors
 - Increment or decrement flavor scoops
