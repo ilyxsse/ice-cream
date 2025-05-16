@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Order } from '@/types/flavor';
+import { History, X } from 'lucide-react';
 
 type Props = {
   orders: Order[];
@@ -14,12 +15,14 @@ export default function OrderHistoryModal({ orders, onClose }: Props) {
       <div className="bg-white dark:bg-zinc-900 p-6 rounded-lg shadow-lg w-full max-w-md relative">
         <button
           onClick={onClose}
-          className="absolute top-2 right-3 text-sm font-bold hover:underline"
+          className="absolute right-4 rounded hover:bg-red-700"
         >
-          ✕
+          <X />
         </button>
 
-        <h2 className="text-lg font-bold mb-4">🧺 Order History</h2>
+        <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+          <History /> Order History
+        </h2>
 
         {orders.length === 0 ? (
           <p className="text-gray-500 text-sm">No past orders.</p>
@@ -38,7 +41,7 @@ export default function OrderHistoryModal({ orders, onClose }: Props) {
                   ))}
                 </ul>
                 <div className="text-right font-semibold mt-2">
-                  Total: ${order.total.toFixed(2)}
+                  Total: {order.total.toFixed(2)} MAD
                 </div>
               </li>
             ))}

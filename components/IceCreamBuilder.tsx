@@ -3,11 +3,14 @@
 import React, { useState } from 'react';
 import { Flavor, Order } from '@/types/flavor';
 import OrderHistoryModal from './OrderHistoryModal';
+import { IceCreamCone, Minus, Plus, ShoppingBasket, SquareMinus, SquarePlus } from 'lucide-react';
 
 const FLAVORS: Flavor[] = [
-  { name: 'Vanilla', price: 2 },
-  { name: 'Chocolate', price: 2.5 },
-  { name: 'Strawberry', price: 2.2 },
+  { name: 'Caramel', price: 7 },
+  { name: 'Turron', price: 10 },
+  { name: 'Frisa', price: 8 },
+  { name: 'Chocolate', price: 7 },
+  { name: 'Lemon', price: 7 },
 ];
 
 export default function IceCreamBuilder() {
@@ -50,9 +53,11 @@ export default function IceCreamBuilder() {
   return (
     <div className="max-w-md mx-auto">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-bold">🍦 Ice Cream Builder</h1>
-        <button onClick={() => setShowModal(true)} className="text-sm underline">
-          Basket
+        <h1 className="text-xl font-bold flex items-center gap-2">
+          <IceCreamCone /> Ice Cream Builder
+        </h1>
+        <button onClick={() => setShowModal(true)} className="rounded hover:bg-orange-400">
+          <ShoppingBasket />
         </button>
       </div>
 
@@ -66,23 +71,23 @@ export default function IceCreamBuilder() {
             >
               <div>
                 <div className="font-medium">{name}</div>
-                <div className="text-sm text-gray-500">${price.toFixed(2)}</div>
+                <div className="text-sm text-gray-500">{price.toFixed(2)} MAD</div>
               </div>
               <div className="flex items-center gap-2">
                 {count > 0 && (
                   <button
                     onClick={() => decrement(name)}
-                    className="px-2 py-1 border rounded"
+                    className="rounded hover:bg-red-600"
                   >
-                    −
+                    <Minus />
                   </button>
                 )}
                 <span>{count}</span>
                 <button
                   onClick={() => increment(name)}
-                  className="px-2 py-1 border rounded"
+                  className="rounded hover:bg-green-600"
                 >
-                  +
+                  <Plus />
                 </button>
               </div>
             </div>
@@ -99,7 +104,7 @@ export default function IceCreamBuilder() {
             : 'bg-orange-500 text-white hover:bg-orange-600'
         }`}
       >
-        {total === 0 ? 'Add to basket' : `Add $${total.toFixed(2)} to basket`}
+        {total === 0 ? 'Add to basket' : `Add ${total.toFixed(2)} MAD to basket`}
       </button>
 
       {showModal && (
