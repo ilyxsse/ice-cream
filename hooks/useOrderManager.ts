@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Order } from '@/types/flavor';
-import { FLAVORS, SAUCES, NUTS } from '@/config/flavors';
+import { Order, MENU } from '@/types/menu';
 
 type ItemCount = {
   [key: string]: number;
@@ -31,8 +30,7 @@ export function useOrderManager() {
   };
 
   const getTotal = () => {
-    const allItems = [...FLAVORS, ...SAUCES, ...NUTS];
-    return allItems.reduce((sum, item) => {
+    return MENU.reduce((sum, item) => {
       const id = getItemId(item.category, item.name);
       return sum + (counts[id] || 0) * item.price;
     }, 0);

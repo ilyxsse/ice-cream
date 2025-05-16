@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Order } from '@/types/flavor';
+import { Order } from '@/types/menu';
 import { History, X } from 'lucide-react';
 import Button from './ui/Button';
 
@@ -21,7 +21,11 @@ export default function OrderHistoryModal({ orders, onClose }: Props) {
     Object.entries(items).forEach(([item, quantity]) => {
       const [name, category] = item.split(' (');
       const cleanCategory = category.replace(')', '') as keyof typeof categories;
-      categories[cleanCategory].push(`${name} x${quantity}`);
+      if (cleanCategory === 'sauce') {
+        categories[cleanCategory].push(name);
+      } else {
+        categories[cleanCategory].push(`${name} (x${quantity})`);
+      }
     });
 
     return categories;
