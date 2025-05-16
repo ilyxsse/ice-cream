@@ -1,54 +1,37 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Flavor, Order } from '@/types/flavor';
+import { IceCreamCone, ShoppingBasket } from 'lucide-react';
+import { FLAVORS, SAUCES, NUTS } from '@/config/flavors';
+import { useOrderManager } from '@/hooks/useOrderManager';
 import OrderHistoryModal from './OrderHistoryModal';
-import { IceCreamCone, Minus, Plus, ShoppingBasket, SquareMinus, SquarePlus } from 'lucide-react';
-
-const FLAVORS: Flavor[] = [
-  { name: 'Caramel', price: 7 },
-  { name: 'Turron', price: 10 },
-  { name: 'Frisa', price: 8 },
-  { name: 'Chocolate', price: 7 },
-  { name: 'Lemon', price: 7 },
-];
+import FlavorCard from './FlavorCard';
+import Button from './ui/Button';
 
 export default function IceCreamBuilder() {
-  const [counts, setCounts] = useState<Record<string, number>>({});
-  const [orderHistory, setOrderHistory] = useState<Order[]>([]);
   const [showModal, setShowModal] = useState(false);
-
-  const increment = (flavor: string) => {
-    setCounts(prev => ({ ...prev, [flavor]: (prev[flavor] || 0) + 1 }));
-  };
-
-  const decrement = (flavor: string) => {
-    setCounts(prev => {
-      const current = prev[flavor] || 0;
-      if (current <= 1) {
-        const updated = { ...prev };
-        delete updated[flavor];
-        return updated;
-      }
-      return { ...prev, [flavor]: current - 1 };
-    });
-  };
-
-  const getTotal = () =>
-    FLAVORS.reduce((sum, { name, price }) => sum + (counts[name] || 0) * price, 0);
-
-  const handleAddToBasket = () => {
-    const total = getTotal();
-    if (total === 0) return;
-
-    setOrderHistory(prev => [
-      ...prev,
-      { timestamp: new Date(), items: { ...counts }, total },
-    ]);
-    setCounts({});
-  };
-
+  const { counts, orderHistory, increment, decrement, getTotal, addToBasket, getItemId } = useOrderManager();
   const total = getTotal();
+
+  const renderSection = (title: string, items: typeof FLAVORS) => (
+    <div className="mb-6">
+      <h2 className="text-lg font-semibold mb-3">{title}</h2>
+      <div className="space-y-4">
+        {items.map((item) => {
+          const id = getItemId(item.category, item.name);
+          return (
+            <FlavorCard
+              key={id}
+              flavor={item}
+              count={counts[id] || 0}
+              onIncrement={() => increment(item.category, item.name)}
+              onDecrement={() => decrement(item.category, item.name)}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
 
   return (
     <div className="max-w-md mx-auto">
@@ -56,56 +39,25 @@ export default function IceCreamBuilder() {
         <h1 className="text-xl font-bold flex items-center gap-2">
           <IceCreamCone /> Ice Cream Builder
         </h1>
-        <button onClick={() => setShowModal(true)} className="rounded hover:bg-orange-400">
-          <ShoppingBasket />
-        </button>
+        <Button
+          variant="secondary"
+          icon={ShoppingBasket}
+          onClick={() => setShowModal(true)}
+        />
       </div>
 
-      <div className="space-y-4">
-        {FLAVORS.map(({ name, price }) => {
-          const count = counts[name] || 0;
-          return (
-            <div
-              key={name}
-              className="flex justify-between items-center border p-3 rounded"
-            >
-              <div>
-                <div className="font-medium">{name}</div>
-                <div className="text-sm text-gray-500">{price.toFixed(2)} MAD</div>
-              </div>
-              <div className="flex items-center gap-2">
-                {count > 0 && (
-                  <button
-                    onClick={() => decrement(name)}
-                    className="rounded hover:bg-red-600"
-                  >
-                    <Minus />
-                  </button>
-                )}
-                <span>{count}</span>
-                <button
-                  onClick={() => increment(name)}
-                  className="rounded hover:bg-green-600"
-                >
-                  <Plus />
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      {renderSection('Taste', FLAVORS)}
+      {renderSection('Sauce', SAUCES)}
+      {renderSection('Nuts', NUTS)}
 
-      <button
-        onClick={handleAddToBasket}
+      <Button
+        onClick={addToBasket}
         disabled={total === 0}
-        className={`w-full mt-6 py-2 rounded font-semibold ${
-          total === 0
-            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            : 'bg-orange-500 text-white hover:bg-orange-600'
-        }`}
+        fullWidth
+        className="mt-6 py-2"
       >
         {total === 0 ? 'Add to basket' : `Add ${total.toFixed(2)} MAD to basket`}
-      </button>
+      </Button>
 
       {showModal && (
         <OrderHistoryModal orders={orderHistory} onClose={() => setShowModal(false)} />
